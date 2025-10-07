@@ -24,6 +24,7 @@ Capture screenshots of the waveform and save the simulation logs. These will be 
 # Verilog Code
 # 4 bit Ripple Adder using Task
 // 4-bit Ripple Carry Adder using Task
+```verilog
 module ripple_adder_task (
     input [3:0] A, B,
     input Cin,
@@ -50,14 +51,57 @@ module ripple_adder_task (
         Cout = c;
     end
 endmodule
-
+```
 
 # Test Bench
+```verilog
+module ripple_tb;
+reg [3:0] A, B;
+reg Cin;
+wire [3:0] Sum;
+wire Cout;
 
+ripple uut (
+.A(A),
+.B(B),
+.Cin(Cin),
+.Sum(Sum),
+.Cout(Cout)
+    );
+
+    initial begin
+        A = 4'b0000;
+        B = 4'b0000;
+        Cin = 0;
+        #10 
+        A = 4'b0011; 
+        B = 4'b0101; 
+        Cin = 0;
+        #10 
+        A = 4'b1111; 
+        B = 4'b0001; 
+        Cin = 1;
+        #10 
+        A = 4'b1010; 
+        B = 4'b0101; 
+        Cin = 0;
+        #10 
+        A = 4'b1111; 
+        B = 4'b1111; 
+        Cin = 0;
+        #10 
+        $finish;
+    end
+endmodule
+```
 # Output Waveform
+<img width="1631" height="1022" alt="Screenshot 2025-10-07 133041" src="https://github.com/user-attachments/assets/69030e49-f0dc-46d0-bcf5-9d7e19e9eda9" />
+
+
 
 # 4 bit Ripple counter using Function
 // 4-bit Ripple Counter using Function
+```verilog
 module ripple_counter_func (
     input clk, rst,
     output reg [3:0] Q
@@ -74,11 +118,36 @@ module ripple_counter_func (
             Q <= count(Q);  // use function to increment
     end
 endmodule
+```
 
 # Test Bench
+```verilog
+module ripple_counter_func_tb;
+    reg clk_t, rst_t;
+    wire [3:0] Q_t;
 
+    ripple_counter_func uut (
+        .clk(clk_t),
+        .rst(rst_t),
+        .Q(Q_t)
+    );
+
+    initial clk_t = 0;
+    always #5 clk_t = ~clk_t;
+
+    initial begin
+        rst_t = 1;
+        #15 
+        rst_t = 0;
+        #100 
+        $finish;
+    end
+endmodule
+```
 
 # Output Waveform 
+<img width="1633" height="1028" alt="Screenshot 2025-10-07 141425" src="https://github.com/user-attachments/assets/62fa3c28-5eac-4f03-9e59-2bad1d7ebe28" />
+
 
 
 # Conclusion
