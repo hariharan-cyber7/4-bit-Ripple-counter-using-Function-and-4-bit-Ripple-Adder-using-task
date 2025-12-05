@@ -25,36 +25,43 @@ Capture screenshots of the waveform and save the simulation logs. These will be 
 # 4 bit Ripple Adder using Task
 // 4-bit Ripple Carry Adder using Task
 ```verilog
+
+`timescale 1ns/1ps
+
 module ripple_adder_task (
     input [3:0] A, B,
     input Cin,
     output reg [3:0] Sum,
     output reg Cout
 );
-    reg c;
-    integer i;
 
-    task full_adder;
-        input a, b, cin;
-        output s, cout;
-        begin
-        ///
-        end
-    endtask
+reg c;
+integer i;
 
-    always @(*) 
+
+task full_adder;
+    input a, b, cin;
+    output s, cout;
     begin
-        c = Cin;
-        for (i = 0; i < 4; i = i + 1) begin
-            full_adder(A[i], B[i], c, Sum[i], c);
-        end
-        Cout = c;
+        s = a ^ b ^ cin;                   
+        cout = (a & b) | (b & cin) | (a & cin); 
     end
+endtask
+
+always @(*) begin
+    c = Cin;
+    for (i = 0; i < 4; i = i + 1) begin
+        full_adder(A[i], B[i], c, Sum[i], c);
+    end
+    Cout = c;
+end
+
 endmodule
 ```
 
 # Test Bench
 ```verilog
+
 module ripple_tb;
 reg [3:0] A, B;
 reg Cin;
@@ -93,10 +100,11 @@ ripple uut (
         $finish;
     end
 endmodule
-```
-# Output Waveform
-<img width="1631" height="1022" alt="Screenshot 2025-10-07 133041" src="https://github.com/user-attachments/assets/69030e49-f0dc-46d0-bcf5-9d7e19e9eda9" />
 
+```
+
+# Output Waveform
+<img width="1920" height="700" alt="Screenshot 2025-10-03 163257" src="https://github.com/user-attachments/assets/149c837b-71d2-4f3c-97b5-5bb0ada97516" />
 
 
 # 4 bit Ripple counter using Function
@@ -108,14 +116,17 @@ module ripple_counter_func (
 );
 
     function [3:0] count;
-     ///
+        input [3:0] val;
+        begin
+            count = val + 1;
+        end
     endfunction
 
     always @(posedge clk or posedge rst) begin
         if (rst)
             Q <= 4'b0000;
         else
-            Q <= count(Q);  // use function to increment
+            Q <= count(Q);
     end
 endmodule
 ```
@@ -145,9 +156,9 @@ module ripple_counter_func_tb;
 endmodule
 ```
 
-# Output Waveform 
-<img width="1633" height="1028" alt="Screenshot 2025-10-07 141425" src="https://github.com/user-attachments/assets/62fa3c28-5eac-4f03-9e59-2bad1d7ebe28" />
 
+# Output Waveform 
+![WhatsApp Image 2025-10-07 at 11 19 15_01a0f841](https://github.com/user-attachments/assets/99b567c3-b667-4d54-a8f6-554c233ce8d2)
 
 
 # Conclusion
